@@ -4,13 +4,41 @@ using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour {
 
+    public float maxSpeed = 10;
+    bool facingRight = true;
+
+    Animator anim;
+    Rigidbody2D rigBod;
+
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+    {
+        anim = GetComponent<Animator>();
+        rigBod = GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void FixedUpdate ()
+    {
+        float move = Input.GetAxis("Horizontal");
+        anim.SetFloat("Speed", Mathf.Abs(move));
+        rigBod.velocity = new Vector2(move * maxSpeed, rigBod.velocity.y);
+        
+        if(move > 0 && !facingRight)
+        {
+            Flip();
+        }
+        else if(move < 0 && facingRight)
+        {
+            Flip();
+        }
 	}
+    void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+
+    }
 }
